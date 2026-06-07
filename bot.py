@@ -23,8 +23,20 @@ def load_db():
     if not os.path.exists(DB_FILE):
         with open(DB_FILE, "w") as f:
             json.dump({}, f)
-    with open(DB_FILE, "r") as f:
-        return json.load(f)
+        return {}
+    
+    try:
+        with open(DB_FILE, "r") as f:
+            content = f.read().strip()
+            if not content:
+                # Agar file khali hai toh empty dict return karo
+                return {}
+            return json.loads(content)
+    except json.JSONDecodeError:
+        # JSONDecodeError aane par file ko auto-fix/reset karo taaki bot crash na ho
+        with open(DB_FILE, "w") as f:
+            json.dump({}, f)
+        return {}
 
 def save_db(data):
     with open(DB_FILE, "w") as f:
