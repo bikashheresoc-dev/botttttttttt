@@ -3,24 +3,22 @@ from telebot import types
 import json
 import os
 
-# ==================== ⚙️ FIXED CONFIGURATION (Aapki Real Details) ====================
+# ==================== ⚙️ CONFIGURATION ====================
 BOT_TOKEN = "8787151484:AAGmdAlrtBa61IUJ7OW8CuCIsbYlOjVR55c"
-ADMIN_ID = 6132146801  
-CHANNEL_ID = "-1003729386499"  
-# ===================================================================================
+ADMIN_ID = 6132146801
+CHANNEL_ID = "-1003729386499"
+# ==========================================================
 
 CHANNEL_LINK = "https://t.me/nobitaosint"
 BOT1_LINK = "https://t.me/nobita_infoo_bot"
 BOT2_LINK = "https://t.me/upi_givewaybot"
 
-# Professional UI Images
 START_IMG = "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1000" 
 REFER_IMG = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1000"
 
 DB_FILE = "users_db.json"
 bot = telebot.TeleBot(BOT_TOKEN, parse_mode="Markdown")
 
-# --- JSON Database Core ---
 def load_db():
     if not os.path.exists(DB_FILE):
         with open(DB_FILE, "w") as f:
@@ -45,7 +43,6 @@ def get_user(user_id, username="User"):
         save_db(db)
     return db[uid]
 
-# --- Subscription Verification System ---
 def is_subscribed(user_id):
     try:
         status = bot.get_chat_member(CHANNEL_ID, user_id).status
@@ -55,7 +52,6 @@ def is_subscribed(user_id):
     except Exception:
         return False
 
-# --- Start Handler ---
 @bot.message_handler(commands=['start'])
 def start_cmd(message):
     user_id = message.from_user.id
@@ -96,7 +92,6 @@ def show_main_menu(chat_id, user):
         reply_markup=markup
     )
 
-# --- Subscription Callback Verification ---
 @bot.callback_query_handler(func=lambda call: call.data.startswith('check_sub_'))
 def callback_check_sub(call):
     user_id = call.from_user.id
@@ -131,7 +126,6 @@ def callback_check_sub(call):
     else:
         bot.answer_callback_query(call.id, "❌ Aapne abhi tak saare tasks poore nahi kiye hain!", show_alert=True)
 
-# --- Button Controllers ---
 @bot.message_handler(func=lambda message: True)
 def handle_menu(message):
     user_id = message.from_user.id
@@ -171,7 +165,6 @@ def handle_menu(message):
         total_users = len(db)
         bot.send_message(message.chat.id, f"📊 *Live Bot Stats*\n\n👥 Total Users: `{total_users}`\n⚡ Powered by @earningeasy_freebot")
 
-# --- Withdraw Flow ---
 @bot.callback_query_handler(func=lambda call: call.data.startswith('wd_'))
 def process_withdrawal(call):
     user_id = call.from_user.id
